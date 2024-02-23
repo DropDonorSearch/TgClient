@@ -93,3 +93,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.p-sidebar-left .p-sidebar {
+  background: var(--color-background);
+}
+</style>
