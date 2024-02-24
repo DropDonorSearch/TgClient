@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@splidejs/splide": "^4.1.4",
+    "@splidejs/vue-splide": "^0.6.12",
     "axios": "^1.6.7",
+    "js-cookie": "^3.0.5",
+    "jscookie": "^1.1.0",
     "luxon": "^3.4.4",
     "pinia": "^2.1.7",
     "primeflex": "^3.3.1",

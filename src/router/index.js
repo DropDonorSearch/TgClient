@@ -3,6 +3,10 @@ import Home from '@/views/home.vue'
 import DonorMemo from "@/views/donor-memo.vue"
 import Settings from "@/views/settings.vue";
 import Events from "@/views/events.vue";
+import BloodStations from "@/views/blood-stations.vue";
+import MyDonations from "@/views/my-donations.vue";
+import Register from "@/views/register.vue";
+import Login from "@/views/login.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +24,10 @@ const router = createRouter({
       meta: { header: 'Памятка донору' }
     },
     {
-      path: '/'
+      path: '/blood-stations',
+      name: 'blood-stations',
+      component: BloodStations,
+      meta: { header: 'Где сдать кровь' }
     },
     {
       path: '/events',
@@ -28,6 +35,25 @@ const router = createRouter({
       component: Events,
       meta: { header: 'Мероприятия' }
     },
+    {
+      path: '/my-donations',
+      name: 'my-donations',
+      component: MyDonations,
+      meta: { header: 'Мои донации' }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
+      meta: { header: 'Регистрация' }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: { header: 'Войти' }
+    },
+
     {
       path: '/settings',
       name: 'settings',

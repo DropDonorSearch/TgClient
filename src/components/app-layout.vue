@@ -60,6 +60,9 @@
 import Navbar from "@/components/navbar.vue";
 import Sidebar from "primevue/sidebar";
 import Button from "primevue/button";
+import {sidebarNavigationItems} from "@/helpers/sidebar-navigation.js";
+import {mapStores} from "pinia";
+import {useApplicationStore} from "@/store/application-store.js";
 
 export default {
   components: {
@@ -70,23 +73,7 @@ export default {
   data() {
     return {
       sidebarVisible: false,
-      navigationItems: [
-        {
-          label: 'Главная',
-          icon: 'pi pi-home',
-          to: '/'
-        },
-        {
-          label: 'Памятка донору',
-          icon: 'pi pi-info',
-          to: '/donor-memo'
-        },
-        {
-          label: 'Мероприятия',
-          icon: 'pi pi-calendar',
-          to: '/events'
-        }
-      ],
+      navigationItems: sidebarNavigationItems,
       profileItems: [
         {
           label: 'Настройки',
@@ -112,7 +99,7 @@ export default {
   },
   computed: {
     userFullName() {
-      return 'Иван Петров'
+      return this.applicationStore.userFullName ?? 'Гость';
     },
     isActiveRoute() {
       return (itemTo) => {
@@ -121,7 +108,8 @@ export default {
     },
     routeHeader() {
       return this.$route.meta.header ?? 'Упс';
-    }
+    },
+    ...mapStores(useApplicationStore)
   }
 }
 </script>

@@ -5,6 +5,8 @@ import { createPinia } from 'pinia'
 
 import PrimeVue from "primevue/config"
 
+import VueSplide from "@splidejs/vue-splide";
+
 import 'primevue/resources/themes/lara-light-indigo/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
@@ -24,5 +26,6 @@ applicationStore.loadFromLocalStorage();
 
 app.use(router);
 app.use(PrimeVue);
+app.use(VueSplide);
 
 app.mount('#app');

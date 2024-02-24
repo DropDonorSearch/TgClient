@@ -2,6 +2,12 @@ import {defineStore} from "pinia";
 
 export const useApplicationStore = defineStore('application', {
     state: () => ({
+        user: {
+            id: undefined,
+            firstName: undefined,
+            lastName: undefined,
+            email: undefined
+        },
         api: {
             loading: false
         },
@@ -16,12 +22,21 @@ export const useApplicationStore = defineStore('application', {
         cityTitle: (state) => state.city.title,
         cityRegionTitle: (state) => state.city.regionTitle,
 
-        isRequestExecuting: (state) => state.api.loading
+        isRequestExecuting: (state) => state.api.loading,
+
+        userId: (state) => state.user.id,
+        userFirstName: (state) => state.user.firstName,
+        userLastName: (state) => state.user.lastName,
+        userFullName: (state) => state.user.firstName + ' ' + state.user.lastName,
+        userEmail: (state) => state.user.email,
     },
     actions: {
         setCity(newCity) {
             this.city = {...this.city, ...newCity};
             this.saveToLocalStorage();
+        },
+        setUser(user) {
+            this.user = {...this.user, ...user};
         },
 
         setRequestExecuting() {
