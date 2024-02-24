@@ -2,9 +2,14 @@
   <div>
     <div class="flex flex-column gap-2" v-if="eventsInfoAvailable">
       <h3>Скоро пройдет {{ eventsCount }} мероприятий</h3>
-      <Carousel :value="eventsInfo" :responsive-options="carousel.responsiveOptions">
+      <Carousel
+          orientation="vertical"
+          vertical-view-port-height="305px"
+          :value="eventsInfo"
+          :responsive-options="carousel.responsiveOptions"
+      >
         <template #item="slotProps">
-          <div class="border-1 surface-border border-round m-2 p-3 event-card">
+          <div class="border-1 surface-border border-round p-3 event-card">
             <div class="flex flex-column gap-2">
               <div class="flex flex-row justify-content-between">
                 <div class="font-bold">{{ formatDate(slotProps.data.start_date) }}</div>
@@ -150,10 +155,6 @@ export default {
 </script>
 
 <style>
-.event-card {
-  max-width: 360px;
-  margin: 1rem;
-}
 
 .event-logo {
   width: 100%;
