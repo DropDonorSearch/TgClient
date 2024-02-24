@@ -3,10 +3,10 @@ import {defineStore} from "pinia";
 export const useApplicationStore = defineStore('application', {
     state: () => ({
         user: {
-            id: undefined,
-            firstName: undefined,
-            lastName: undefined,
-            email: undefined
+            id: 500,
+            firstName: 'Игорь',
+            lastName: 'Петров',
+            email: 'igor@gmail.com'
         },
         api: {
             loading: false
