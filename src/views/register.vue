@@ -25,7 +25,7 @@
 <script>
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
-import apiClient from "@/api/apiClient.js";
+import apiClient from "@/api/api-client.js";
 import {mapStores} from "pinia";
 import {useApplicationStore} from "@/store/application-store.js";
 

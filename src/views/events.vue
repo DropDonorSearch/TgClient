@@ -1,100 +1,40 @@
 <template>
   <div>
-    <div class="flex flex-column gap-2" v-if="eventsInfoAvailable">
-      <h3>Скоро пройдет {{ eventsCount }} мероприятий</h3>
-      <Carousel
-          orientation="vertical"
-          vertical-view-port-height="305px"
-          :value="eventsInfo"
-          :responsive-options="carousel.responsiveOptions"
-      >
-        <template #item="slotProps">
-          <div class="border-1 surface-border border-round p-3 event-card">
-            <div class="flex flex-column gap-2">
-              <div class="flex flex-row justify-content-between">
-                <div class="font-bold">{{ formatDate(slotProps.data.start_date) }}</div>
-                <div class="time">{{ formatTime(slotProps.data.start_date) }} - {{
-                    formatTime(slotProps.data.end_date)
-                  }}
-                </div>
-              </div>
-              <Divider/>
-              <div class="flex flex-row gap-3 my-2">
-                <Avatar
-                    v-if="slotProps.data.author.image"
-                    :image="slotProps.data.author.image"
-                    class="mr-2 custom-avatar"
-                    size="large"
-                    shape="circle"
-                />
-                <span class="font-bold">{{ slotProps.data.author.name }}</span>
-              </div>
-              <div>
-                <h3 class="font-bold">{{ slotProps.data.name }}</h3>
-              </div>
-              <div>
-                <h4>{{ formatCity(slotProps.data) }}</h4>
-                <h4 v-if="slotProps.data.address">{{ slotProps.data.address }}</h4>
-              </div>
-              <div class="mt-1">
-                <Button class="w-full" size="large" label="Записаться" @click="signUp(slotProps.data)"/>
-              </div>
-            </div>
-          </div>
-        </template>
-      </Carousel>
+    <div
+        class="flex flex-column gap-2"
+        ref="scrollComponent"
+    >
+      <EventCard v-for="infoItem in eventsInfo" key="infoItem.id" :card-data="infoItem"/>
     </div>
-    <div v-else-if="!loading && !eventsInfoAvailable">
+    <div v-if="!loading && !eventsInfoAvailable">
       <h3>В вашем городе пока не запланировано мероприятий, но они обязательно скоро появятся :)</h3>
     </div>
-    <Spinner v-else/>
+    <Spinner v-if="loading"/>
   </div>
 </template>
 
 <script>
 import {mapStores} from "pinia";
 import {useApplicationStore} from "@/store/application-store.js";
-import {mockEventsInfo} from "@/helpers/mock-events-info.js";
-import Carousel from "primevue/carousel";
-import Divider from "primevue/divider";
-import Button from "primevue/button";
-import Avatar from "primevue/avatar";
 
 import timeHelper from "@/helpers/time-helper.js";
-import apiClient from "@/api/apiClient.js";
+import apiClient from "@/api/api-client.js";
 import Spinner from "@/components/spinner.vue";
+import EventCard from "@/components/event-card.vue";
+
+const PAGE_SIZE = 10;
 
 export default {
   components: {
-    Carousel,
-    Divider,
-    Button,
-    Avatar,
+    EventCard,
     Spinner
   },
   data() {
     return {
       loading: false,
       eventsInfo: [],
-      carousel: {
-        responsiveOptions: [
-          {
-            breakpoint: '1199px',
-            numVisible: 3,
-            numScroll: 1
-          },
-          {
-            breakpoint: '767px',
-            numVisible: 2,
-            numScroll: 1
-          },
-          {
-            breakpoint: '575px',
-            numVisible: 1,
-            numScroll: 1
-          }
-        ]
-      }
+
+      nextPath: undefined
     }
   },
   mixins: [timeHelper],
@@ -103,12 +43,8 @@ export default {
     eventsInfoAvailable() {
       return this.eventsInfo && this.eventsInfo.length > 0;
     },
-    eventsCount() {
-      if (!this.eventsInfo) {
-        return 0;
-      }
+    currentPageNumber() {
 
-      return this.eventsInfo.length;
     }
   },
   methods: {
@@ -121,11 +57,9 @@ export default {
 
     formatCity(eventData) {
       const city = eventData.city;
-
       if (city?.title && city?.region?.title) {
         return city.region.title + ', ' + city.title;
       }
-
       return null;
     },
 
@@ -133,40 +67,66 @@ export default {
       // TODO: implement
     },
 
-    loadData() {
+    async loadNextData() {
+      if (!this.nextPath || this.loading) {
+        return;
+      }
+
       this.loading = true;
 
-      apiClient.get('/events', {params: {
-          page_size: 10,
-          page: 1
-        }})
+      await apiClient.get(this.nextPath)
           .then((response) => {
-            if (response.data?.results) {
-              this.eventsInfo = response.data?.results;
+            const data = response.data;
+
+            if (data?.results) {
+              this.eventsInfo.push(...response.data?.results);
             }
+
+            this.nextPath = data?.next ?? undefined;
           })
           .finally(() => this.loading = false);
+    },
+    initialLoadData() {
+      this.loading = true;
+
+      apiClient.get('/events', {
+        params: {
+          page_size: PAGE_SIZE,
+          page: this.currentPageNumber
+        }
+      })
+          .then((response) => {
+            const data = response.data;
+
+            if (data?.results) {
+              this.eventsInfo = response.data?.results;
+            }
+
+            this.nextPath = data?.next ?? undefined;
+          })
+          .finally(() => this.loading = false);
+    },
+
+    handleScroll() {
+      if (!this.$refs.scrollComponent) return;
+
+      let element = this.$refs.scrollComponent;
+      if (element.getBoundingClientRect().bottom < window.innerHeight && !this.loading) {
+        this.loadNextData();
+      }
     }
   },
   async mounted() {
-    this.loadData();
+    window.addEventListener("scroll", this.handleScroll);
+    this.initialLoadData();
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 }
 </script>
 
 <style>
-
-.event-logo {
-  width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
-}
-
-.volunteers {
-  text-align: center;
-  margin-top: 1rem;
-}
-
 .custom-avatar img {
   object-fit: cover;
   width: 3rem;
