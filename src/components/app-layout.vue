@@ -1,5 +1,5 @@
 <template>
-  <div class="app-layout">
+  <div>
     <Sidebar v-model:visible="sidebarVisible">
       <template #container="{ closeCallback }">
         <div class="flex flex-column h-full">
@@ -8,11 +8,13 @@
               <img src="@/assets/donor-search-logo.svg" alt="Donor Search Logo" />
             </span>
           </div>
-          <div class="flex flex-column justify-content-around overflow-y-auto">
+          <div class="flex flex-column h-full justify-content-between overflow-y-auto">
             <ul class="list-none p-3 m-0">
-              <li v-for="item in navigationItems" :key="item.label">
-                <a v-ripple
-                   class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+              <li class="my-1" v-for="item in navigationItems" :key="item.label">
+                <a class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:bg-black-alpha-10 transition-duration-150 transition-colors p-ripple"
+                   :class="{'active': isActiveRoute(item.to)}"
+                   @click="switchRoute(item.to)"
+                >
                   <i :class="item.icon + ' mr-2'"></i>
                   <span class="font-medium">{{ item.label }}</span>
                 </a>
@@ -20,8 +22,11 @@
             </ul>
             <ul class="list-none p-3 m-0">
               <li v-for="item in profileItems" :key="item.label">
-                <a v-ripple
-                   class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:surface-100 transition-duration-150 transition-colors p-ripple">
+                <a
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:bg-black-alpha-10 transition-duration-150 transition-colors p-ripple"
+                    :class="{'active': isActiveRoute(item.to)}"
+                    @click="switchRoute(item.to)"
+                >
                   <i :class="item.icon + ' mr-2'"></i>
                   <span class="font-medium">{{ item.label }}</span>
                   <span v-if="item.badge"
@@ -40,8 +45,14 @@
         </div>
       </template>
     </Sidebar>
+
     <Navbar @toggle-menu="toggleSidebar"/>
-    <slot></slot>
+    <div class="flex flex-column gap-3 my-2 mx-4">
+      <h1>{{ routeHeader }}</h1>
+      <div class="router-slot">
+        <slot></slot>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -63,20 +74,29 @@ export default {
         {
           label: 'Главная',
           icon: 'pi pi-home',
+          to: '/'
         },
         {
           label: 'Памятка донору',
           icon: 'pi pi-info',
+          to: '/donor-memo'
+        },
+        {
+          label: 'Мероприятия',
+          icon: 'pi pi-calendar',
+          to: '/events'
         }
       ],
       profileItems: [
         {
           label: 'Настройки',
           icon: 'pi pi-cog',
+          to: '/settings'
         },
         {
           label: 'Выход',
           icon: 'pi pi-sign-out',
+          to: '/logout'
         }
       ]
     }
@@ -84,18 +104,39 @@ export default {
   methods: {
     toggleSidebar() {
       this.sidebarVisible = !this.sidebarVisible;
+    },
+    switchRoute(to) {
+      this.$router.push(to);
+      this.toggleSidebar();
     }
   },
   computed: {
     userFullName() {
       return 'Иван Петров'
+    },
+    isActiveRoute() {
+      return (itemTo) => {
+        return this.$route.path === itemTo;
+      };
+    },
+    routeHeader() {
+      return this.$route.meta.header ?? 'Упс';
     }
   }
 }
 </script>
 
 <style>
-.p-sidebar-left .p-sidebar {
-  background: var(--color-background);
+.p-sidebar {
+  background: var(--color-background) !important;
+  border: 1px solid var(--color-background) !important;
+}
+.p-sidebar, .text-700 {
+  color: var(--color-text) !important;
+}
+
+.active {
+  background-color: var(--primary-color);
+  color: white !important;
 }
 </style>

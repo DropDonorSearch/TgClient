@@ -5,18 +5,24 @@ import { createPinia } from 'pinia'
 
 import PrimeVue from "primevue/config"
 
-import 'primevue/resources/themes/aura-light-green/theme.css'
+import 'primevue/resources/themes/lara-light-indigo/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
-import App from './app.vue'
-import router from './router'
+import App from './app.vue';
+import router from './router';
+import {useApplicationStore} from "@/store/application-store.js";
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
-app.use(PrimeVue)
+const pinia = createPinia();
+app.use(pinia);
 
-app.mount('#app')
+const applicationStore = useApplicationStore();
+applicationStore.loadFromLocalStorage();
+
+app.use(router);
+app.use(PrimeVue);
+
+app.mount('#app');
