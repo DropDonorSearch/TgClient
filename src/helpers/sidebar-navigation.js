@@ -24,4 +24,9 @@ export const sidebarNavigationItems = [
         icon: 'pi pi-list',
         to: '/my-donations'
     },
+    {
+        label: 'Бонусы',
+        icon: 'pi pi-money-bill',
+        to: '/bonuses'
+    },
 ]
