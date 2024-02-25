@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import Home from '@/views/home.vue'
 import DonorMemo from "@/views/donor-memo.vue"
 import Settings from "@/views/settings.vue";
@@ -11,6 +11,7 @@ import AddDonation from "@/views/add-donation.vue";
 import ScheduleDonation from "@/views/schedule-donation.vue";
 import ScheduledDonations from "@/views/scheduled-donations.vue";
 import {useApplicationStore} from "@/store/application-store.js";
+import Bonuses from "@/views/bonuses.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,6 +90,12 @@ const router = createRouter({
       name: 'settings',
       component: Settings,
       meta: { header: 'Настройки', requiresLogin: true }
+    },
+    {
+      path: '/bonuses',
+      name: 'bonuses',
+      component: Bonuses,
+      meta: {header: 'Бонусы'}
     }
   ]
 })
