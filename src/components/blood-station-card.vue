@@ -12,15 +12,23 @@
       </div>
       <Divider />
       <div class="flex flex-row justify-content-between">
-        <div class="flex flex-row gap-1">
-          <Tag :severity="getTagSeverity(cardData.o_plus)" value="O+" />
-          <Tag :severity="getTagSeverity(cardData.o_minus)" value="O-" />
-          <Tag :severity="getTagSeverity(cardData.a_plus)" value="A+" />
-          <Tag :severity="getTagSeverity(cardData.a_minus)" value="A-" />
-          <Tag :severity="getTagSeverity(cardData.b_plus)" value="B+" />
-          <Tag :severity="getTagSeverity(cardData.b_minus)" value="B-" />
-          <Tag :severity="getTagSeverity(cardData.ab_plus)" value="AB+" />
-          <Tag :severity="getTagSeverity(cardData.ab_minus)" value="AB-" />
+        <div class="flex flex-row gap-2">
+          <div class="flex flex-column gap-1">
+            <Tag :severity="getTagSeverity(cardData.o_plus)" value="O+" />
+            <Tag :severity="getTagSeverity(cardData.o_minus)" value="O-" />
+          </div>
+          <div class="flex flex-column gap-1">
+            <Tag :severity="getTagSeverity(cardData.a_plus)" value="A+" />
+            <Tag :severity="getTagSeverity(cardData.a_minus)" value="A-" />
+          </div>
+          <div class="flex flex-column gap-1">
+            <Tag :severity="getTagSeverity(cardData.b_plus)" value="B+" />
+            <Tag :severity="getTagSeverity(cardData.b_minus)" value="B-" />
+          </div>
+          <div class="flex flex-column gap-1">
+            <Tag :severity="getTagSeverity(cardData.ab_plus)" value="AB+" />
+            <Tag :severity="getTagSeverity(cardData.ab_minus)" value="AB-" />
+          </div>
         </div>
         <Button label="Запись" @click="scheduleDonation(cardData.id)"/>
       </div>
