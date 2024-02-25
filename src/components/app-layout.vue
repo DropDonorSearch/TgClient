@@ -122,7 +122,12 @@ export default {
               label: 'Запланированные донации',
               icon: 'pi pi-calendar',
               to: '/scheduled-donations'
-            }
+            },
+            {
+              label: 'Бонусы',
+              icon: 'pi pi-money-bill',
+              to: '/bonuses'
+            },
         );
       }
 
