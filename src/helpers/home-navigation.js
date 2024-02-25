@@ -25,6 +25,11 @@ export const homeNavigationItems = [
         to: '/scheduled-donations'
     },
     {
+        label: 'Бонусы',
+        icon: 'pi pi-money-bill',
+        to: '/bonuses'
+    },
+    {
         label: 'Настройки',
         icon: 'pi pi-cog',
         to: '/settings'
