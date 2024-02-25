@@ -42,9 +42,6 @@ export default {
     ...mapStores(useApplicationStore),
     eventsInfoAvailable() {
       return this.eventsInfo && this.eventsInfo.length > 0;
-    },
-    currentPageNumber() {
-
     }
   },
   methods: {
@@ -92,7 +89,7 @@ export default {
       apiClient.get('/events', {
         params: {
           page_size: PAGE_SIZE,
-          page: this.currentPageNumber
+          page: 1
         }
       })
           .then((response) => {

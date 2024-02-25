@@ -19,4 +19,9 @@ export const homeNavigationItems = [
         icon: 'pi pi-list',
         to: '/my-donations'
     },
+    {
+        label: 'Запланированные донации',
+        icon: 'pi pi-calendar',
+        to: '/scheduled-donations'
+    }
 ]

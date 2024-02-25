@@ -1,39 +1,44 @@
 import {defineStore} from "pinia";
+import { useCookies } from "vue3-cookies";
+import apiClient from "@/api/api-client.js";
 
 export const useApplicationStore = defineStore('application', {
     state: () => ({
-        user: {
-            id: 500,
-            firstName: 'Игорь',
-            lastName: 'Петров',
-            email: 'igor@gmail.com'
-        },
+        user: {},
         api: {
             loading: false
-        },
-        city: {
-            id: 1,
-            title: 'г. Санкт-Петербург',
-            regionTitle: 'Санкт-Петербург'
         }
     }),
     getters: {
-        cityId: (state) => state.city.id,
-        cityTitle: (state) => state.city.title,
-        cityRegionTitle: (state) => state.city.regionTitle,
-
         isRequestExecuting: (state) => state.api.loading,
 
         userId: (state) => state.user.id,
-        userFirstName: (state) => state.user.firstName,
-        userLastName: (state) => state.user.lastName,
-        userFullName: (state) => state.user.firstName + ' ' + state.user.lastName,
+        userFirstName: (state) => state.user.first_name,
+        userLastName: (state) => state.user.last_name,
+
+        userFullName: (state) => {
+            const firstName = state.user.first_name;
+            const lastName = state.user.last_name;
+
+            let resultFullName = '';
+
+            if (firstName) {
+                resultFullName += firstName;
+            }
+            if (lastName) {
+                resultFullName += ' ' + lastName;
+            }
+
+            return resultFullName;
+        },
+
         userEmail: (state) => state.user.email,
+        loggedIn: (state) => !!state.user.id,
+        getBloodStations: (state) => state.bloodStations
     },
     actions: {
-        setCity(newCity) {
-            this.city = {...this.city, ...newCity};
-            this.saveToLocalStorage();
+        setBloodStations(newBloodStations) {
+            this.bloodStations = {...this.bloodStations, ...newBloodStations};
         },
         setUser(user) {
             this.user = {...this.user, ...user};
@@ -46,15 +51,26 @@ export const useApplicationStore = defineStore('application', {
             this.api.loading = false;
         },
 
-        loadFromLocalStorage() {
-            const city = localStorage.getItem('city');
-            if (city) {
-                this.city = JSON.parse(city);
-            }
+        async refreshUserState() {
+
+            await apiClient.get('/auth/me')
+                .then((response) => {
+                    if (!response.data) {
+                        this.setUser({});
+                    } else {
+                        this.setUser(response.data);
+                    }
+                })
+                .catch(err => {
+                    this.logout();
+                });
         },
 
-        saveToLocalStorage() {
-            localStorage.setItem('city', JSON.stringify(this.city));
+        async logout() {
+             const { cookies } = useCookies();
+             cookies.remove('token');
+             delete apiClient.defaults.headers.common['cookie'];
+             this.setUser({});
         }
     }
 });

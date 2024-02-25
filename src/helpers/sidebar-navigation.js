@@ -18,10 +18,5 @@ export const sidebarNavigationItems = [
         label: 'Мероприятия',
         icon: 'pi pi-calendar',
         to: '/events'
-    },
-    {
-        label: 'Мои донации',
-        icon: 'pi pi-list',
-        to: '/my-donations'
-    },
+    }
 ]

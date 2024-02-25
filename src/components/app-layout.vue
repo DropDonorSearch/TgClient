@@ -5,7 +5,7 @@
         <div class="flex flex-column h-full">
           <div class="flex align-items-center justify-content-between px-4 pt-3 flex-shrink-0">
             <span class="inline-flex align-items-center gap-2">
-              <img src="@/assets/donor-search-logo.svg" alt="Donor Search Logo" />
+              <img src="@/assets/donor-search-logo.svg" alt="Donor Search Logo"/>
             </span>
           </div>
           <div class="flex flex-column h-full justify-content-between overflow-y-auto">
@@ -20,7 +20,7 @@
                 </a>
               </li>
             </ul>
-            <ul class="list-none p-3 m-0">
+            <ul v-if="applicationStore.loggedIn" class="list-none p-3 m-0">
               <li v-for="item in profileItems" :key="item.label">
                 <a
                     class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:bg-black-alpha-10 transition-duration-150 transition-colors p-ripple"
@@ -36,7 +36,7 @@
               </li>
             </ul>
           </div>
-          <div class="mt-auto">
+          <div v-if="applicationStore.loggedIn" class="mt-auto">
             <hr class="mb-3 mx-3 border-top-1 border-none surface-border"/>
             <div class="m-3 flex align-items-center">
               <span class="font-bold">{{ userFullName }}</span>
@@ -73,7 +73,6 @@ export default {
   data() {
     return {
       sidebarVisible: false,
-      navigationItems: sidebarNavigationItems,
       profileItems: [
         {
           label: 'Настройки',
@@ -109,6 +108,26 @@ export default {
     routeHeader() {
       return this.$route.meta.header ?? 'Упс';
     },
+    navigationItems() {
+      const navigationItems = sidebarNavigationItems;
+
+      if (this.applicationStore.loggedIn) {
+        navigationItems.push(
+            {
+              label: 'Мои донации',
+              icon: 'pi pi-list',
+              to: '/my-donations'
+            },
+            {
+              label: 'Запланированные донации',
+              icon: 'pi pi-calendar',
+              to: '/scheduled-donations'
+            }
+        );
+      }
+
+      return navigationItems;
+    },
     ...mapStores(useApplicationStore)
   }
 }
@@ -119,6 +138,7 @@ export default {
   background: var(--color-background) !important;
   border: 1px solid var(--color-background) !important;
 }
+
 .p-sidebar, .text-700 {
   color: var(--color-text) !important;
 }

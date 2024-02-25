@@ -1,5 +1,5 @@
 <template>
-  <div class="border-1 surface-border border-round p-3 event-card">
+  <div class="border-1 surface-border border-round p-3">
     <div class="flex flex-column gap-2">
       <div class="flex flex-row justify-content-between">
         <div class="font-bold">{{ formatDate(cardData.start_date) }}</div>

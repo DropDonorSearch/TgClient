@@ -1,10 +1,10 @@
 <template>
   <div class="navbar">
     <Button class="hamburger-button" icon="pi pi-bars" @click="toggleMenu" text />
-    <span class="city-info">
-      <i class="pi pi-map-marker"></i>
-      {{ applicationStore.cityTitle }}
-    </span>
+<!--    <span class="city-info">-->
+<!--      <i class="pi pi-map-marker"></i>-->
+<!--      {{ applicationStore.cityTitle }}-->
+<!--    </span>-->
   </div>
 </template>
 

@@ -1,8 +1,11 @@
 @import './base.css';
-@import '@splidejs/splide/dist/css/splide.min.css';
 
 #app {
   font-weight: normal;
   display: flex;
   flex-direction: column;
+}
+
+.p-dialog {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

@@ -8,7 +8,8 @@
         <span class="donor-search-sign">DonorSearch</span>
         <h1 class="font-bold">- твой путеводитель в мир донорства</h1>
       </div>
-      <Button label="Присоединиться" @click="openRegister" />
+      <Button label="Зарегистрироваться" @click="openRegister" />
+      <Button label="Войти" severity="secondary" @click="openLogin" />
     </div>
     <div class="flex flex-column gap-3" v-else>
       <h2>Здравствуйте, {{ applicationStore.userFullName }}!</h2>
@@ -29,9 +30,7 @@ export default {
     GridMenu
   },
   data() {
-    return {
-
-    }
+    return {}
   },
   computed: {
     ...mapStores(useApplicationStore)
@@ -39,6 +38,9 @@ export default {
   methods: {
     openRegister() {
       this.$router.push('/register');
+    },
+    openLogin() {
+      this.$router.push('/login');
     }
   }
 }
