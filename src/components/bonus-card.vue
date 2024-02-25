@@ -2,19 +2,18 @@
   <div class="border-1 surface-border border-round p-3 event-card">
     <div
         class="flex flex-column gap-2"
-        @click="changeCardSide"
     >
       <div class="flex flex-row gap-3 my-2">
         <avatar
-            :image="cardData.partnerLogo"
+            :image="cardData.image_url"
             class="mr-2 custom-avatar"
             size="large"
             shape="circle"
         />
-        <span class="font-bold">{{ cardData.name }}</span>
+        <span class="font-bold">{{ cardData.title }}</span>
       </div>
       <div
-          v-if="isMainSideActive"
+          v-if="!isTaken"
       >
         <h3 class="font-bold">{{ cardData.description }}</h3>
       </div>
@@ -25,6 +24,7 @@
           <b @click.stop="copyText(cardData.promo)">{{ cardData.promo }}</b>
         </h3>
       </div>
+      <Button @click="takeBonus" v-show="!isTaken" label="Взять бонус" icon="pi pi-check"/>
     </div>
   </div>
 </template>
@@ -34,6 +34,7 @@
 import Divider from "primevue/divider";
 import Button from "primevue/button";
 import Avatar from "primevue/avatar";
+import apiClient from "@/api/api-client.js";
 
 export default {
   components: {
@@ -44,18 +45,24 @@ export default {
   props: ['cardData'],
   data() {
     return {
-      isMainSideActive: true
+      isTaken: false
     }
   },
   methods: {
-    changeCardSide() {
-      this.isMainSideActive = !this.isMainSideActive;
+    takeBonus() {
+      this.isTaken = !this.isTaken;
+      apiClient.delete('bonuses', {
+        params: {
+          userId: this.applicationStore.userId,
+          bonusId: this.cardData.bonus_id
+        }
+      })
+
     },
     async copyText(text) {
       try {
         await navigator.clipboard.writeText(text);
-      } catch($e) {
-
+      } catch ($e) {
       }
     }
   },

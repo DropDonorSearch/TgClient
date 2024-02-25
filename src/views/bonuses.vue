@@ -13,7 +13,9 @@
 
 import Spinner from "@/components/spinner.vue";
 import BonusCard from "@/components/bonus-card.vue";
-
+import apiClient from "@/api/api-client.js";
+import {useApplicationStore} from "@/store/application-store.js";
+import {mapStores} from "pinia";
 
 export default {
   components: {BonusCard, Spinner},
@@ -54,6 +56,28 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapStores(useApplicationStore),
+  },
+  methods: {
+    async initialLoadData() {
+      this.loading = true;
+
+      await apiClient.get('bonuses', {
+        params: {
+          userId: this.applicationStore.userId
+        }
+      })
+          .then((response) => {
+            this.bonuses = response.data;
+
+          })
+          .finally(() => this.loading = false);
+    },
+  },
+  async mounted() {
+    this.initialLoadData();
   },
 };
 </script>
