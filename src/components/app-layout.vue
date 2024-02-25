@@ -34,6 +34,15 @@
                         style="min-width: 1.5rem; height: 1.5rem">{{ item.badge }}</span>
                 </a>
               </li>
+              <li>
+                <a
+                    class="flex align-items-center cursor-pointer p-3 border-round text-700 hover:bg-black-alpha-10 transition-duration-150 transition-colors p-ripple"
+                    @click="logout"
+                >
+                  <i class="pi pi-sign-out"></i>
+                  <span class="font-medium ml-2">{{ 'Выход' }}</span>
+                </a>
+              </li>
             </ul>
           </div>
           <div v-if="applicationStore.loggedIn" class="mt-auto">
@@ -78,11 +87,6 @@ export default {
           label: 'Настройки',
           icon: 'pi pi-cog',
           to: '/settings'
-        },
-        {
-          label: 'Выход',
-          icon: 'pi pi-sign-out',
-          to: '/logout'
         }
       ]
     }
@@ -94,6 +98,11 @@ export default {
     switchRoute(to) {
       this.$router.push(to);
       this.toggleSidebar();
+    },
+    async logout() {
+      await this.applicationStore.logout();
+
+      this.$nextTick(() => this.$router.push('/'));
     }
   },
   computed: {
